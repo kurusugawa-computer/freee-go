@@ -1,6 +1,8 @@
 freee-go
 ====
 
+[![GoDoc](https://godoc.org/github.com/smith-30/go-ffprobe?status.svg)](https://godoc.org/github.com/kurusugawa-computer/freee-go)
+
 freee API の go クライアント
 
 現在開発中です。
