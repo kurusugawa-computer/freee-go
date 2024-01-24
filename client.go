@@ -12,16 +12,33 @@ import (
 	"strings"
 )
 
-func New(clientID string, clientSecret string, accessToken *AccessToken) (*Client, error) {
+type opt struct {
+	HTTPClient *http.Client
+}
+
+type OptFunc func(*opt)
+
+func WithHTTPClient(httpClient *http.Client) func(*opt) {
+	return func(o *opt) {
+		o.HTTPClient = httpClient
+	}
+}
+
+func New(clientID string, clientSecret string, accessToken *AccessToken, opts ...OptFunc) (*Client, error) {
 	if accessToken == nil {
 		return nil, errors.New("access token is nil")
 	}
 
-	httpClient := http.DefaultClient
+	o := &opt{
+		HTTPClient: http.DefaultClient,
+	}
+	for _, of := range opts {
+		of(o)
+	}
 
 	c := &Client{
-		httpClient: httpClient,
-		Token:      newTokenManager(clientID, clientSecret, accessToken, httpClient),
+		httpClient: o.HTTPClient,
+		Token:      newTokenManager(clientID, clientSecret, accessToken, o.HTTPClient),
 	}
 
 	return c, nil
