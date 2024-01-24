@@ -1,0 +1,21 @@
+{
+    "useGitignore": true,
+    "ignorePaths": [
+        "**/.git/objects/**",
+        "**/.devcontainer/**",
+        "**/.vscode/**",
+        "**/vendor/**",
+        "**/node_modules/**",
+        "**/go.mod"
+    ],
+    "words": [
+        "Datetime",
+        "Entried",
+        "freee",
+        "krsinfra",
+        "kurusugawa",
+        "Latenight",
+        "skratchdot",
+        "zipcode"
+    ]
+}
