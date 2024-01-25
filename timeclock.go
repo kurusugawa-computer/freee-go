@@ -26,7 +26,7 @@ type ListTimeClocksOps struct {
 }
 
 // ListTimeClocks は指定した従業員・期間の打刻情報を返します。
-func (aClient *Client) ListTimeClocks(companyID int, employeeID int, opts *ListTimeClocksOps) ([]TimeClock, error) {
+func (c *Client) ListTimeClocks(companyID int, employeeID int, opts *ListTimeClocksOps) ([]TimeClock, error) {
 	u := "/api/v1/employees/" + url.PathEscape(strconv.Itoa(employeeID)) + "/time_clocks"
 	q := url.Values{
 		"company_id": {strconv.Itoa(companyID)},
@@ -45,7 +45,7 @@ func (aClient *Client) ListTimeClocks(companyID int, employeeID int, opts *ListT
 			q.Set("offset", strconv.Itoa(opts.Limit))
 		}
 	}
-	resp, err := aClient.do(http.MethodGet, u, q, nil)
+	resp, err := c.do(http.MethodGet, u, q, nil)
 	if err != nil {
 		return nil, err
 	}
