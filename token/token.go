@@ -7,6 +7,7 @@ import (
 	"mime"
 	"net/http"
 	"net/url"
+	"time"
 )
 
 type TokenInfo struct {
@@ -17,6 +18,16 @@ type TokenInfo struct {
 	Scope        string `json:"scope"`
 	CreatedAt    int64  `json:"created_at"` // トークンが作成された Unix 秒
 	CompanyID    int    `json:"company_id"`
+}
+
+// IsExpired は指定した時刻においてトークンの有効期限が切れているかを取得します。
+func (token TokenInfo) IsExpiredIn(t time.Time) bool {
+	return t.After(time.Unix(token.CreatedAt, 0).Add(time.Duration(token.ExpiresIn) * time.Second))
+}
+
+// IsExpired は現在時刻においてトークンの有効期限が切れているかを取得します。
+func (token TokenInfo) IsExpired() bool {
+	return token.IsExpiredIn(time.Now())
 }
 
 type opt struct {

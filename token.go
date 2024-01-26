@@ -3,7 +3,6 @@ package freee
 import (
 	"net/http"
 	"sync"
-	"time"
 
 	"github.com/kurusugawa-computer/freee-go/token"
 )
@@ -38,7 +37,7 @@ func (m *tokenManager) GetAccessToken() (*AccessToken, error) {
 	m.mutex.Lock()
 	accessToken := m.token
 
-	if time.Now().After(time.Unix(accessToken.CreatedAt, 0).Add(time.Duration(accessToken.ExpiresIn) * time.Second)) {
+	if accessToken.IsExpired() {
 		accessToken, err := token.RefreshAccessToken(m.clientID, m.clientSecret, accessToken.RefreshToken, token.WithHTTPClient(m.httpClient))
 		if err != nil {
 			return nil, err
