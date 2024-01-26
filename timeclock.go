@@ -27,7 +27,7 @@ type ListTimeClocksOps struct {
 
 // ListTimeClocks は指定した従業員・期間の打刻情報を返します。
 func (c *Client) ListTimeClocks(companyID int, employeeID int, opts *ListTimeClocksOps) ([]TimeClock, error) {
-	u := "/api/v1/employees/" + url.PathEscape(strconv.Itoa(employeeID)) + "/time_clocks"
+	u := "https://api.freee.co.jp/hr/api/v1/employees/" + url.PathEscape(strconv.Itoa(employeeID)) + "/time_clocks"
 	q := url.Values{
 		"company_id": {strconv.Itoa(companyID)},
 	}
@@ -60,7 +60,7 @@ func (c *Client) ListTimeClocks(companyID int, employeeID int, opts *ListTimeClo
 
 // GetTimeClock は指定した従業員・指定した打刻の詳細情報を返します。
 func (c *Client) GetTimeClock(companyID int, employeeID int, timeClockID int) (TimeClock, error) {
-	u := "/api/v1/employees/" + url.PathEscape(strconv.Itoa(employeeID)) + "/time_clocks/" + url.PathEscape(strconv.Itoa(timeClockID))
+	u := "https://api.freee.co.jp/hr/api/v1/employees/" + url.PathEscape(strconv.Itoa(employeeID)) + "/time_clocks/" + url.PathEscape(strconv.Itoa(timeClockID))
 	q := url.Values{
 		"company_id": {strconv.Itoa(companyID)},
 	}
@@ -91,7 +91,7 @@ type GetAvailableTypesOpts struct {
 // GetAvailableTypes は指定した従業員・日付の打刻可能種別と打刻基準日を返します。
 // 例: すでに出勤した状態だと、休憩開始、退勤が配列で返ります。
 func (c *Client) GetAvailableTypes(companyID int, employeeID int, opts *GetAvailableTypesOpts) (AvailableTypes, error) {
-	u := "/api/v1/employees/" + url.PathEscape(strconv.Itoa(employeeID)) + "/time_clocks/available_types"
+	u := "https://api.freee.co.jp/hr/api/v1/employees/" + url.PathEscape(strconv.Itoa(employeeID)) + "/time_clocks/available_types"
 	q := url.Values{
 		"company_id": {strconv.Itoa(companyID)},
 	}
@@ -134,7 +134,7 @@ type CreateTimeClockRequest struct {
 // - 打刻が日をまたぐ場合は、base_date(打刻日)に前日の日付を指定してください。
 // - datetime(打刻日時)を指定できるのは管理者か事務担当者の権限を持ったユーザーのみです。
 func (c *Client) CreateTimeClock(companyID int, employeeID int, request *CreateTimeClockRequest) (TimeClock, error) {
-	u := "/api/v1/employees/" + url.PathEscape(strconv.Itoa(employeeID)) + "/time_clocks"
+	u := "https://api.freee.co.jp/hr/api/v1/employees/" + url.PathEscape(strconv.Itoa(employeeID)) + "/time_clocks"
 	resp, err := c.do(http.MethodPost, u, nil, request)
 	if err != nil {
 		return TimeClock{}, err

@@ -49,7 +49,7 @@ type WorkRecord struct {
 
 // DeleteWorkRecord は指定した従業員の勤怠情報を削除します。
 func (c *Client) DeleteWorkRecord(employeeID int, date string) error {
-	u := "/api/v1/employees/" + url.PathEscape(strconv.Itoa(employeeID)) + "/work_records/" + url.PathEscape(date)
+	u := "https://api.freee.co.jp/hr/api/v1/employees/" + url.PathEscape(strconv.Itoa(employeeID)) + "/work_records/" + url.PathEscape(date)
 	resp, err := c.do(http.MethodDelete, u, nil, nil)
 	if err != nil {
 		return err
@@ -60,7 +60,7 @@ func (c *Client) DeleteWorkRecord(employeeID int, date string) error {
 
 // GetWorkRecord は指定した従業員・日付の勤怠情報を返します。
 func (c *Client) GetWorkRecord(employeeID int, date string) (WorkRecord, error) {
-	u := "/api/v1/employees/" + url.PathEscape(strconv.Itoa(employeeID)) + "/work_records/" + url.PathEscape(date)
+	u := "https://api.freee.co.jp/hr/api/v1/employees/" + url.PathEscape(strconv.Itoa(employeeID)) + "/work_records/" + url.PathEscape(date)
 	resp, err := c.do(http.MethodGet, u, nil, nil)
 	if err != nil {
 		return WorkRecord{}, err
@@ -105,7 +105,7 @@ type PutWorkRecordRequest struct {
 // 注意点
 // - 振替出勤・振替休日・代休出勤・代休の登録はAPIでは行うことができません。
 func (c *Client) PutWorkRecord(employeeID int, date string, request *PutWorkRecordRequest) (WorkRecord, error) {
-	u := "/api/v1/employees/" + url.PathEscape(strconv.Itoa(employeeID)) + "/work_records/" + url.PathEscape(date)
+	u := "https://api.freee.co.jp/hr/api/v1/employees/" + url.PathEscape(strconv.Itoa(employeeID)) + "/work_records/" + url.PathEscape(date)
 	resp, err := c.do(http.MethodPut, u, nil, request)
 	if err != nil {
 		return WorkRecord{}, err
