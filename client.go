@@ -182,13 +182,13 @@ func handleError(r *response) error {
 
 	case "application/json":
 		errResponse := struct {
-			Error            string `json:"error"`
-			ErrorDescription string `json:"error_description"`
+			Error   string `json:"error"`
+			Message string `json:"message"`
 		}{}
 		if err := json.NewDecoder(r.Body).Decode(&errResponse); err != nil {
 			return invalidStatusCode()
 		}
-		return errors.New(errResponse.ErrorDescription + " (" + errResponse.Error + ")")
+		return errors.New(errResponse.Message + " (" + errResponse.Error + ")")
 	}
 
 	return invalidStatusCode()
