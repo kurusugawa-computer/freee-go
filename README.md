@@ -14,7 +14,7 @@ go get github.com/kurusugawa-computer/freee-go
 ```
 
 https://developer.freee.co.jp/startguide/starting-api の手順でアプリケーションを作成し、`Client ID` と `Client Secret` を取得します。  
-`コールバックURL` には `http://localhost:<port>` を指定してください。  
+`コールバックURL` には `http://localhost:<port>/` を指定してください。  
 `<port>` は実装するアプリケーション側で決定します。  
 
 ## Example
