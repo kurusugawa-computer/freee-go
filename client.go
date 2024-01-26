@@ -13,7 +13,9 @@ import (
 )
 
 type opt struct {
-	HTTPClient *http.Client
+	HTTPClient    *http.Client
+	beforeRequest []func(*http.Request) (*http.Request, error)
+	afterResponse []func(*http.Response) (*http.Response, error)
 }
 
 type OptFunc func(*opt)
@@ -21,6 +23,22 @@ type OptFunc func(*opt)
 func WithHTTPClient(httpClient *http.Client) func(*opt) {
 	return func(o *opt) {
 		o.HTTPClient = httpClient
+	}
+}
+
+type Hooks struct {
+	BeforeRequest func(*http.Request) (*http.Request, error)
+	AfterResponse func(*http.Response) (*http.Response, error)
+}
+
+func WithHooks(hooks Hooks) func(*opt) {
+	return func(o *opt) {
+		if hooks.BeforeRequest != nil {
+			o.beforeRequest = append(o.beforeRequest, hooks.BeforeRequest)
+		}
+		if hooks.AfterResponse != nil {
+			o.afterResponse = append(o.afterResponse, hooks.AfterResponse)
+		}
 	}
 }
 
@@ -37,16 +55,20 @@ func New(clientID string, clientSecret string, accessToken *AccessToken, opts ..
 	}
 
 	c := &Client{
-		httpClient: o.HTTPClient,
-		Token:      newTokenManager(clientID, clientSecret, accessToken, o.HTTPClient),
+		httpClient:    o.HTTPClient,
+		Token:         newTokenManager(clientID, clientSecret, accessToken, o.HTTPClient),
+		beforeRequest: o.beforeRequest,
+		afterResponse: o.afterResponse,
 	}
 
 	return c, nil
 }
 
 type Client struct {
-	httpClient *http.Client
-	Token      *tokenManager
+	httpClient    *http.Client
+	Token         *tokenManager
+	beforeRequest []func(*http.Request) (*http.Request, error)
+	afterResponse []func(*http.Response) (*http.Response, error)
 }
 
 type response struct {
@@ -102,18 +124,30 @@ func (c *Client) do(method string, targetURL string, query url.Values, payload a
 		req.Header.Set("Content-Type", "application/json; charset=UTF-8")
 	}
 
-	rawResp, err := c.httpClient.Do(req)
+	for _, hook := range c.beforeRequest {
+		req, err = hook(req)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
 
-	resp := &response{rawResp}
-
-	if resp.StatusCode >= 200 && resp.StatusCode < 300 {
-		return resp, nil
+	for _, hook := range c.afterResponse {
+		resp, err = hook(resp)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	return nil, handleError(resp)
+	if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+		return &response{resp}, nil
+	}
+
+	return nil, handleError(&response{resp})
 }
 
 func handleError(r *response) error {
