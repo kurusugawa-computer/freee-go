@@ -114,7 +114,7 @@ func (c *Client) do(method string, targetURL string, query url.Values, payload a
 		return nil, err
 	}
 
-	req, err := http.NewRequest(http.MethodGet, u.String(), body)
+	req, err := http.NewRequest(method, u.String(), body)
 	if err != nil {
 		return nil, err
 	}
