@@ -95,6 +95,10 @@ func Authorize(clientID string, port int, opts ...OptFunc) (string, error) {
 					err = errors.New("state mismatch")
 				}
 
+				if q.Get("error") != "" {
+					err = errors.New(q.Get("error_description"))
+				}
+
 				o.Renderer(w, tAuthorizationCode, err)
 
 				resultCh <- Result{tAuthorizationCode, err}
