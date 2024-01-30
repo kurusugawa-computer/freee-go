@@ -133,7 +133,7 @@ type CreateTimeClockRequest struct {
 //
 // - 打刻が日をまたぐ場合は、base_date(打刻日)に前日の日付を指定してください。
 // - datetime(打刻日時)を指定できるのは管理者か事務担当者の権限を持ったユーザーのみです。
-func (c *Client) CreateTimeClock(companyID int, employeeID int, request *CreateTimeClockRequest) (TimeClock, error) {
+func (c *Client) CreateTimeClock(employeeID int, request *CreateTimeClockRequest) (TimeClock, error) {
 	u := "https://api.freee.co.jp/hr/api/v1/employees/" + url.PathEscape(strconv.Itoa(employeeID)) + "/time_clocks"
 	resp, err := c.do(http.MethodPost, u, nil, request)
 	if err != nil {
