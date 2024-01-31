@@ -84,7 +84,7 @@ type AvailableTypes struct {
 }
 
 type GetAvailableTypesOpts struct {
-	Date string // 従業員情報を取得したい年月日(YYYY-MM-DD)(例:2018-08-01)(デフォルト：当日)
+	Date *Date // 従業員情報を取得したい年月日(YYYY-MM-DD)(例:2018-08-01)(デフォルト：当日)
 }
 
 // GetAvailableTypes は指定した従業員・日付の打刻可能種別と打刻基準日を返します。
@@ -95,8 +95,8 @@ func (c *Client) GetAvailableTypes(companyID int, employeeID int, opts *GetAvail
 		"company_id": {strconv.Itoa(companyID)},
 	}
 	if opts != nil {
-		if opts.Date != "" {
-			q.Set("date", opts.Date)
+		if opts.Date != nil {
+			q.Set("date", opts.Date.String())
 		}
 	}
 	resp, err := c.do(http.MethodGet, u, q, nil)
