@@ -4,25 +4,24 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
-	"time"
 )
 
 // https://developer.freee.co.jp/reference/hr/reference#operations-tag-タイムレコーダー(打刻)
 
 type TimeClock struct {
-	ID               int       `json:"id"`
-	Date             string    `json:"date"`
-	Type             string    `json:"type"`
-	Datetime         time.Time `json:"datetime"`
-	OriginalDatetime time.Time `json:"original_datetime"`
-	Note             string    `json:"note"`
+	ID               int    `json:"id"`
+	Date             string `json:"date"`
+	Type             string `json:"type"`
+	Datetime         string `json:"datetime"`
+	OriginalDatetime string `json:"original_datetime"`
+	Note             string `json:"note"`
 }
 
 type ListTimeClocksOps struct {
-	FromDate string // 取得する打刻期間の開始日(YYYY-MM-DD)(例:2018-08-01)(デフォルト: 当月の打刻開始日)
-	ToDate   string // 取得する打刻期間の終了日(YYYY-MM-DD)(例:2018-08-31)(デフォルト: 当日)
-	Limit    int    // 取得レコードの件数 (デフォルト: 50, 最小: 1, 最大: 100)
-	Offset   int    // 取得レコードのオフセット (デフォルト: 0)
+	FromDate *Date // 取得する打刻期間の開始日(YYYY-MM-DD)(例:2018-08-01)(デフォルト: 当月の打刻開始日)
+	ToDate   *Date // 取得する打刻期間の終了日(YYYY-MM-DD)(例:2018-08-31)(デフォルト: 当日)
+	Limit    int   // 取得レコードの件数 (デフォルト: 50, 最小: 1, 最大: 100)
+	Offset   int   // 取得レコードのオフセット (デフォルト: 0)
 }
 
 // ListTimeClocks は指定した従業員・期間の打刻情報を返します。
@@ -32,17 +31,17 @@ func (c *Client) ListTimeClocks(companyID int, employeeID int, opts *ListTimeClo
 		"company_id": {strconv.Itoa(companyID)},
 	}
 	if opts != nil {
-		if opts.FromDate != "" {
-			q.Set("from_date", opts.FromDate)
+		if opts.FromDate != nil {
+			q.Set("from_date", opts.FromDate.String())
 		}
-		if opts.ToDate != "" {
-			q.Set("to_date", opts.ToDate)
+		if opts.ToDate != nil {
+			q.Set("to_date", opts.ToDate.String())
 		}
-		if opts.Limit != 50 {
+		if opts.Limit > 0 {
 			q.Set("limit", strconv.Itoa(opts.Limit))
 		}
 		if opts.Offset > 0 {
-			q.Set("offset", strconv.Itoa(opts.Limit))
+			q.Set("offset", strconv.Itoa(opts.Offset))
 		}
 	}
 	resp, err := c.do(http.MethodGet, u, q, nil)
