@@ -113,10 +113,10 @@ func (c *Client) GetAvailableTypes(companyID int, employeeID int, opts *GetAvail
 }
 
 type CreateTimeClockRequest struct {
-	CompanyID int     `json:"company_id"`
-	Type      string  `json:"type"`
-	BaseDate  *string `json:"base_date,omitempty"`
-	Datetime  *string `json:"datetime,omitempty"`
+	CompanyID int       `json:"company_id"`
+	Type      string    `json:"type"`
+	BaseDate  *Date     `json:"base_date,omitempty"`
+	Datetime  *DateTime `json:"datetime,omitempty"`
 }
 
 // CreateTimeClock は指定した従業員の打刻情報を登録します。
