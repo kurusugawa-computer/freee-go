@@ -342,22 +342,24 @@ func (c *Client) CreateEmployee(req *CreateEmployeeRequest) (Employee, error) {
 }
 
 type UpdateEmployeeRequest struct {
-	CompanyID int  `json:"company_id"`
-	Year      *int `json:"year,omitempty"`
-	Month     *int `json:"month,omitempty"`
-	Employee  struct {
-		Num                                *string `json:"num,omitempty"`
-		DisplayName                        *string `json:"display_name,omitempty"`
-		BasePensionNum                     *string `json:"base_pension_num,omitempty"`
-		EmploymentInsuranceReferenceNumber *string `json:"employment_insurance_reference_number,omitempty"`
-		BirthDate                          string  `json:"birth_date"`
-		EntryDate                          string  `json:"entry_date"`
-		RetireDate                         *string `json:"retire_date,omitempty"`
-		CompanyReferenceDateRuleName       *string `json:"company_reference_date_rule_name,omitempty"`
-	} `json:"employee"`
+	CompanyID int                           `json:"company_id"`
+	Year      *int                          `json:"year,omitempty"`
+	Month     *int                          `json:"month,omitempty"`
+	Employee  UpdateEmployeeRequestEmployee `json:"employee"`
 }
 
-// CreateEmployee は従業員を新規作成します。
+type UpdateEmployeeRequestEmployee struct {
+	Num                                string `json:"num,omitempty"`
+	DisplayName                        string `json:"display_name,omitempty"`
+	BasePensionNum                     string `json:"base_pension_num,omitempty"`
+	EmploymentInsuranceReferenceNumber string `json:"employment_insurance_reference_number,omitempty"`
+	BirthDate                          Date   `json:"birth_date"`
+	EntryDate                          Date   `json:"entry_date"`
+	RetireDate                         *Date  `json:"retire_date,omitempty"`
+	CompanyReferenceDateRuleName       string `json:"company_reference_date_rule_name,omitempty"`
+}
+
+// UpdateEmployee は指定した従業員の情報を更新します。
 // 注意点
 // - 管理者権限を持ったユーザーのみ実行可能です。
 func (c *Client) UpdateEmployee(employeeID int, request *UpdateEmployeeRequest) (Employee, error) {
