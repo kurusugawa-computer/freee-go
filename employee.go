@@ -300,23 +300,25 @@ func (c *Client) GetEmployee(companyID int, employeeID int, year int, month int)
 }
 
 type CreateEmployeeRequest struct {
-	CompanyID int `json:"company_id"`
-	Employee  struct {
-		Num                          *string `json:"num,omitempty"`
-		WorkingHoursSystemName       *string `json:"working_hours_system_name,omitempty"`
-		CompanyReferenceDateRuleName *string `json:"company_reference_date_rule_name,omitempty"`
-		LastName                     string  `json:"last_name"`
-		FirstName                    string  `json:"first_name"`
-		LastNameKana                 string  `json:"last_name_kana"`
-		FirstNameKana                string  `json:"first_name_kana"`
-		BirthDate                    string  `json:"birth_date"`
-		EntryDate                    string  `json:"entry_date"`
-		PayCalcType                  *string `json:"pay_calc_type,omitempty"`
-		PayAmount                    *int    `json:"pay_amount,omitempty"`
-		Gender                       *string `json:"gender,omitempty"`
-		Married                      *bool   `json:"married,omitempty"`
-		NoPayrollCalculation         *bool   `json:"no_payroll_calculation,omitempty"`
-	} `json:"employee"`
+	CompanyID int                           `json:"company_id"`
+	Employee  CreateEmployeeRequestEmployee `json:"employee"`
+}
+
+type CreateEmployeeRequestEmployee struct {
+	Num                          string `json:"num,omitempty"`
+	WorkingHoursSystemName       string `json:"working_hours_system_name,omitempty"`
+	CompanyReferenceDateRuleName string `json:"company_reference_date_rule_name,omitempty"`
+	LastName                     string `json:"last_name"`
+	FirstName                    string `json:"first_name"`
+	LastNameKana                 string `json:"last_name_kana"`
+	FirstNameKana                string `json:"first_name_kana"`
+	BirthDate                    Date   `json:"birth_date"`
+	EntryDate                    Date   `json:"entry_date"`
+	PayCalcType                  string `json:"pay_calc_type,omitempty"`
+	PayAmount                    *int   `json:"pay_amount,omitempty"`
+	Gender                       string `json:"gender,omitempty"`
+	Married                      *bool  `json:"married,omitempty"`
+	NoPayrollCalculation         *bool  `json:"no_payroll_calculation,omitempty"`
 }
 
 // CreateEmployee は従業員を新規作成します。
