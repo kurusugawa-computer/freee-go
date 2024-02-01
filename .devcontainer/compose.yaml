@@ -38,4 +38,8 @@ services:
 
 volumes:
   extensions:
+    external: true
+    name: devcontainer_extensions
   go:
+    external: true
+    name: devcontainer_go1.21
