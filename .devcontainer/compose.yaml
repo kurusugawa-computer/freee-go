@@ -1,4 +1,4 @@
-version: '3'
+version: "3.8"
 
 services:
   dev:
@@ -19,8 +19,6 @@ services:
       - type: volume
         source: extensions
         target: /home/vscode/.vscode-server/extensions
-        volume:
-          nocopy: true
       - type: bind
         source: .bash
         target: /home/vscode/.cache/bash
@@ -28,8 +26,6 @@ services:
       - type: volume
         source: go
         target: /home/vscode/go
-        volume:
-          nocopy: true
     extra_hosts:
       - host.docker.internal:host-gateway
     environment:
@@ -42,8 +38,8 @@ services:
 
 volumes:
   extensions:
-    external:
-      name: devcontainer_extensions
+    external: true
+    name: devcontainer_extensions
   go:
-    external:
-      name: devcontainer_go1.21
+    external: true
+    name: devcontainer_go1.21
