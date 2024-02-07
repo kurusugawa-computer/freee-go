@@ -56,7 +56,7 @@ func (c *Client) ListCompaniesEmployees(companyID int, opts *ListAllEmployeesOpt
 			q.Set("limit", strconv.Itoa(opts.Limit))
 		}
 		if opts.Offset > 0 {
-			q.Set("offset", strconv.Itoa(opts.Limit))
+			q.Set("offset", strconv.Itoa(opts.Offset))
 		}
 		if opts.WithNoPayrollCalculation {
 			q.Set("with_no_payroll_calculation", strconv.FormatBool(opts.WithNoPayrollCalculation))
