@@ -56,7 +56,7 @@ func (c *Client) ListCompaniesEmployees(companyID int, opts *ListAllEmployeesOpt
 			q.Set("limit", strconv.Itoa(opts.Limit))
 		}
 		if opts.Offset > 0 {
-			q.Set("offset", strconv.Itoa(opts.Limit))
+			q.Set("offset", strconv.Itoa(opts.Offset))
 		}
 		if opts.WithNoPayrollCalculation {
 			q.Set("with_no_payroll_calculation", strconv.FormatBool(opts.WithNoPayrollCalculation))
@@ -231,13 +231,18 @@ type ListEmployeesOpts struct {
 	WithNoPayrollCalculation bool // trueを指定すると給与計算対象外の従業員情報をレスポンスに含めます。
 }
 
-// ListEmployees は指定した対象年月に事業所に所属する従業員をリストで返します。
+type ListEmployeeResult struct {
+	Employees  []Employee `json:"employees"`
+	TotalCount int        `json:"total_count"`
+}
+
+// ListEmployees は指定した対象年月に事業所に所属する従業員のリストと、条件に一致する従業員の総数を返します。
 // 注意点
 // - 管理者権限を持ったユーザーのみ実行可能です。
 // - 指定した年月に退職済みユーザーは取得できません。
 // - 保険料計算方法が自動計算の場合、対応する保険料の直接指定金額は無視されnullが返されます。(例: 給与計算時の健康保険料の計算方法が自動計算の場合、給与計算時の健康保険料の直接指定金額はnullが返されます)
 // - 事業所が定額制の健康保険組合に加入している場合、保険料の直接指定金額は無視されnullが返されます。
-func (c *Client) ListEmployees(companyID int, year int, month int, opts *ListEmployeesOpts) ([]Employee, error) {
+func (c *Client) ListEmployees(companyID int, year int, month int, opts *ListEmployeesOpts) (*ListEmployeeResult, error) {
 	u := "https://api.freee.co.jp/hr/api/v1/employees"
 	q := url.Values{
 		"company_id": {strconv.Itoa(companyID)},
@@ -249,7 +254,7 @@ func (c *Client) ListEmployees(companyID int, year int, month int, opts *ListEmp
 			q.Set("limit", strconv.Itoa(opts.Limit))
 		}
 		if opts.Offset > 0 {
-			q.Set("offset", strconv.Itoa(opts.Limit))
+			q.Set("offset", strconv.Itoa(opts.Offset))
 		}
 		if opts.WithNoPayrollCalculation {
 			q.Set("with_no_payroll_calculation", strconv.FormatBool(opts.WithNoPayrollCalculation))
@@ -260,15 +265,12 @@ func (c *Client) ListEmployees(companyID int, year int, month int, opts *ListEmp
 		return nil, err
 	}
 
-	result := struct {
-		Employees  []Employee `json:"employees"`
-		TotalCount int        `json:"total_count"`
-	}{}
+	var result ListEmployeeResult
 	if err := resp.Parse(&result); err != nil {
 		return nil, err
 	}
 
-	return result.Employees, nil
+	return &result, nil
 }
 
 // GetEmployee は指定したIDの従業員を返します。
