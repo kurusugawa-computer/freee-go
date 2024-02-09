@@ -14,7 +14,7 @@ import (
 func (c *Client) DeleteEmployee(companyID int, employeeID int) error {
 	u := "https://api.freee.co.jp/hr/api/v1/employees/" + url.PathEscape(strconv.Itoa(employeeID))
 	q := url.Values{
-		"company_id ": {strconv.Itoa(companyID)},
+		"company_id": {strconv.Itoa(companyID)},
 	}
 	resp, err := c.do(http.MethodDelete, u, q, nil)
 	if err != nil {
