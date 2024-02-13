@@ -81,27 +81,27 @@ func (c *Client) GetWorkRecord(employeeID int, companyID int, date Date) (WorkRe
 }
 
 type PutWorkRecordRequest struct {
-	CompanyID                int                         `json:"company_id"`
-	BreakRecords             *[]PutWorkRecordBreakRecord `json:"break_records,omitempty"`
-	ClockInAt                *DateTime                   `json:"clock_in_at,omitempty"`
-	ClockOutAt               *DateTime                   `json:"clock_out_at,omitempty"`
-	DayPattern               *string                     `json:"day_pattern,omitempty"`
-	EarlyLeavingMins         *int                        `json:"early_leaving_mins,omitempty"`
-	IsAbsence                *bool                       `json:"is_absence,omitempty"`
-	LatenessMins             *int                        `json:"lateness_mins,omitempty"`
-	NormalWorkClockInAt      *DateTime                   `json:"normal_work_clock_in_at,omitempty"`
-	NormalWorkClockOutAt     *DateTime                   `json:"normal_work_clock_out_at,omitempty"`
-	NormalWorkMins           *int                        `json:"normal_work_mins,omitempty"`
-	Note                     *string                     `json:"note,omitempty"`
-	PaidHoliday              *string                     `json:"paid_holiday,omitempty"`
-	HalfPaidHolidayMins      *int                        `json:"half_paid_holiday_mins,omitempty"`
-	HourlyPaidHolidayMins    *int                        `json:"hourly_paid_holiday_mins,omitempty"`
-	SpecialHoliday           *int                        `json:"special_holiday,omitempty"`
-	SpecialHolidaySettingID  *int                        `json:"special_holiday_setting_id,omitempty"`
-	HalfSpecialHolidayMins   *int                        `json:"half_special_holiday_mins,omitempty"`
-	HourlySpecialHolidayMins *int                        `json:"hourly_special_holiday_mins,omitempty"`
-	UseAttendanceDeduction   *bool                       `json:"use_attendance_deduction,omitempty"`
-	UseDefaultWorkPattern    *bool                       `json:"use_default_work_pattern,omitempty"`
+	CompanyID                int                        `json:"company_id"`
+	BreakRecords             []PutWorkRecordBreakRecord `json:"break_records,omitempty"`
+	ClockInAt                *DateTime                  `json:"clock_in_at,omitempty"`
+	ClockOutAt               *DateTime                  `json:"clock_out_at,omitempty"`
+	DayPattern               *string                    `json:"day_pattern,omitempty"`
+	EarlyLeavingMins         *int                       `json:"early_leaving_mins,omitempty"`
+	IsAbsence                *bool                      `json:"is_absence,omitempty"`
+	LatenessMins             *int                       `json:"lateness_mins,omitempty"`
+	NormalWorkClockInAt      *DateTime                  `json:"normal_work_clock_in_at,omitempty"`
+	NormalWorkClockOutAt     *DateTime                  `json:"normal_work_clock_out_at,omitempty"`
+	NormalWorkMins           *int                       `json:"normal_work_mins,omitempty"`
+	Note                     *string                    `json:"note,omitempty"`
+	PaidHoliday              *string                    `json:"paid_holiday,omitempty"`
+	HalfPaidHolidayMins      *int                       `json:"half_paid_holiday_mins,omitempty"`
+	HourlyPaidHolidayMins    *int                       `json:"hourly_paid_holiday_mins,omitempty"`
+	SpecialHoliday           *int                       `json:"special_holiday,omitempty"`
+	SpecialHolidaySettingID  *int                       `json:"special_holiday_setting_id,omitempty"`
+	HalfSpecialHolidayMins   *int                       `json:"half_special_holiday_mins,omitempty"`
+	HourlySpecialHolidayMins *int                       `json:"hourly_special_holiday_mins,omitempty"`
+	UseAttendanceDeduction   *bool                      `json:"use_attendance_deduction,omitempty"`
+	UseDefaultWorkPattern    *bool                      `json:"use_default_work_pattern,omitempty"`
 }
 
 type PutWorkRecordBreakRecord struct {
