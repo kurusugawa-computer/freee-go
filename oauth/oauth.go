@@ -101,8 +101,10 @@ func Authorize(clientID string, port int, opts ...OptFunc) (string, error) {
 
 				o.Renderer(w, tAuthorizationCode, err)
 
-				resultCh <- Result{tAuthorizationCode, err}
-				shutdownCh <- struct{}{}
+				if err == nil {
+					resultCh <- Result{tAuthorizationCode, err}
+					shutdownCh <- struct{}{}
+				}
 			}),
 		}
 		go func() {
