@@ -80,12 +80,20 @@ func (c *Client) GetWorkRecord(employeeID int, companyID int, date Date) (WorkRe
 	return workRecord, nil
 }
 
+type DayPattern string
+
+const (
+	NormalDay         DayPattern = "normal_day"
+	PrescribedHoliday DayPattern = "prescribed_holiday"
+	LegalHoliday      DayPattern = "legal_holiday"
+)
+
 type PutWorkRecordRequest struct {
 	CompanyID                int                        `json:"company_id"`
 	BreakRecords             []PutWorkRecordBreakRecord `json:"break_records,omitempty"`
 	ClockInAt                *DateTime                  `json:"clock_in_at,omitempty"`
 	ClockOutAt               *DateTime                  `json:"clock_out_at,omitempty"`
-	DayPattern               *string                    `json:"day_pattern,omitempty"`
+	DayPattern               *DayPattern                `json:"day_pattern,omitempty"`
 	EarlyLeavingMins         *int                       `json:"early_leaving_mins,omitempty"`
 	IsAbsence                *bool                      `json:"is_absence,omitempty"`
 	LatenessMins             *int                       `json:"lateness_mins,omitempty"`
@@ -93,7 +101,7 @@ type PutWorkRecordRequest struct {
 	NormalWorkClockOutAt     *DateTime                  `json:"normal_work_clock_out_at,omitempty"`
 	NormalWorkMins           *int                       `json:"normal_work_mins,omitempty"`
 	Note                     *string                    `json:"note,omitempty"`
-	PaidHoliday              *string                    `json:"paid_holiday,omitempty"`
+	PaidHoliday              *int                       `json:"paid_holiday,omitempty"`
 	HalfPaidHolidayMins      *int                       `json:"half_paid_holiday_mins,omitempty"`
 	HourlyPaidHolidayMins    *int                       `json:"hourly_paid_holiday_mins,omitempty"`
 	SpecialHoliday           *int                       `json:"special_holiday,omitempty"`
