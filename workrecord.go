@@ -47,9 +47,12 @@ type WorkRecord struct {
 }
 
 // DeleteWorkRecord は指定した従業員の勤怠情報を削除します。
-func (c *Client) DeleteWorkRecord(employeeID int, date Date) error {
+func (c *Client) DeleteWorkRecord(companyID int, employeeID int, date Date) error {
 	u := "https://api.freee.co.jp/hr/api/v1/employees/" + url.PathEscape(strconv.Itoa(employeeID)) + "/work_records/" + url.PathEscape(date.String())
-	resp, err := c.do(http.MethodDelete, u, nil, nil)
+	q := url.Values{
+		"company_id": {strconv.Itoa(companyID)},
+	}
+	resp, err := c.do(http.MethodDelete, u, q, nil)
 	if err != nil {
 		return err
 	}
