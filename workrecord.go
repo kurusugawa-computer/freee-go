@@ -61,7 +61,7 @@ func (c *Client) DeleteWorkRecord(companyID int, employeeID int, date Date) erro
 }
 
 // GetWorkRecord は指定した従業員・日付の勤怠情報を返します。
-func (c *Client) GetWorkRecord(employeeID int, companyID int, date Date) (WorkRecord, error) {
+func (c *Client) GetWorkRecord(companyID int, employeeID int, date Date) (WorkRecord, error) {
 	u := "https://api.freee.co.jp/hr/api/v1/employees/" + url.PathEscape(strconv.Itoa(employeeID)) + "/work_records/" + url.PathEscape(date.String())
 	pu, err := url.Parse(u)
 	if err != nil {
@@ -185,7 +185,7 @@ type GetWorkRecordOpts struct {
 // GetWorkRecordSummariesは、指定した従業員、月の勤怠情報のサマリを返します。
 // 注意点
 // - work_recordsオプションにtrueを指定することで、明細となる日次の勤怠情報もあわせて返却します。
-func (c *Client) GetWorkRecordSummaries(employeeID int, companyID int, year int, month int, opts *GetWorkRecordOpts) (WorkRecordSummaries, error) {
+func (c *Client) GetWorkRecordSummaries(companyID int, employeeID int, year int, month int, opts *GetWorkRecordOpts) (WorkRecordSummaries, error) {
 	u := "https://api.freee.co.jp/hr/api/v1/employees/" + url.PathEscape(strconv.Itoa(employeeID)) + "/work_record_summaries/" + url.PathEscape(strconv.Itoa(year)) + "/" + url.PathEscape(strconv.Itoa(month))
 	q := url.Values{
 		"company_id": {strconv.Itoa(companyID)},
