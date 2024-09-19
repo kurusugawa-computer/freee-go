@@ -10,6 +10,8 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+
+	"github.com/go-chi/chi/v5"
 )
 
 type opt struct {
@@ -79,31 +81,43 @@ func Authorize(clientID string, port int, opts ...OptFunc) (string, error) {
 	}
 	resultCh := make(chan Result)
 	defer close(resultCh)
+
 	go func() {
 		shutdownCh := make(chan struct{})
 		defer close(shutdownCh)
+
+		authHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			q := r.URL.Query()
+
+			tAuthorizationCode := q.Get("code")
+
+			var err error
+			if q.Get("state") != state {
+				tAuthorizationCode = ""
+				err = errors.New("state mismatch")
+			}
+
+			if q.Get("error") != "" {
+				err = errors.New(q.Get("error_description"))
+			}
+
+			o.Renderer(w, tAuthorizationCode, err)
+
+			resultCh <- Result{tAuthorizationCode, err}
+			shutdownCh <- struct{}{}
+		})
+
+		notFoundHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			http.Error(w, "Not Found", http.StatusNotFound)
+		})
+
+		mux := chi.NewRouter()
+		mux.Handle("/", authHandler)
+		mux.Handle("/*", notFoundHandler)
+
 		server := &http.Server{
-			Addr: fmt.Sprintf(":%d", port),
-			Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				q := r.URL.Query()
-
-				tAuthorizationCode := q.Get("code")
-
-				var err error
-				if q.Get("state") != state {
-					tAuthorizationCode = ""
-					err = errors.New("state mismatch")
-				}
-
-				if q.Get("error") != "" {
-					err = errors.New(q.Get("error_description"))
-				}
-
-				o.Renderer(w, tAuthorizationCode, err)
-
-				resultCh <- Result{tAuthorizationCode, err}
-				shutdownCh <- struct{}{}
-			}),
+			Addr:    fmt.Sprintf(":%d", port),
+			Handler: mux,
 		}
 		go func() {
 			<-shutdownCh
