@@ -10,8 +10,6 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
-
-	"github.com/go-chi/chi/v5"
 )
 
 type opt struct {
@@ -111,9 +109,15 @@ func Authorize(clientID string, port int, opts ...OptFunc) (string, error) {
 			http.Error(w, "Not Found", http.StatusNotFound)
 		})
 
-		mux := chi.NewRouter()
-		mux.Handle("/", authHandler)
-		mux.Handle("/*", notFoundHandler)
+		mux := http.NewServeMux()
+		mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			switch r.URL.Path {
+			case "/":
+				authHandler.ServeHTTP(w, r)
+			default:
+				notFoundHandler.ServeHTTP(w, r)
+			}
+		})
 
 		server := &http.Server{
 			Addr:    fmt.Sprintf(":%d", port),
